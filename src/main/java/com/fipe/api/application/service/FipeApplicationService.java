@@ -3,6 +3,7 @@ package com.fipe.api.application.service;
 import com.fipe.api.application.api.FipeFeignClient;
 import com.fipe.api.application.api.response.BrandResponse;
 import com.fipe.api.application.api.response.ModelResponse;
+import com.fipe.api.application.api.response.YearResponse;
 import com.fipe.api.domain.VehicleType;
 import com.fipe.api.handler.APIException;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +18,11 @@ import java.util.List;
 @RequiredArgsConstructor
 @Log4j2
 public class FipeApplicationService implements FipeService {
-    private final FipeFeignClient vehiclFeignClient;
+    private final FipeFeignClient fipeFeignClient;
     @Override
     public List<BrandResponse> getVehicleBrands(String vehicleType) {
         log.info("[start] FipeApplicationService - getVehicleBrands");
-        List<BrandResponse> vehicleBrands = vehiclFeignClient.getVehicleBrands(vehicleType);
+        List<BrandResponse> vehicleBrands = fipeFeignClient.getVehicleBrands(vehicleType);
         vehicleBrands.sort(Comparator.comparing(BrandResponse::getName));
         log.info("[finish] FipeApplicationService - getVehicleBrands");
         return vehicleBrands;
@@ -32,9 +33,20 @@ public class FipeApplicationService implements FipeService {
         log.info("[start] FipeApplicationService - getModelsByBrand");
         validateVehicleType(vehicleType);
         validateBrandId(vehicleType, brandId);
-        ModelResponse modelsByBrand = vehiclFeignClient.getModelsByBrand(vehicleType, brandId);
+        ModelResponse modelsByBrand = fipeFeignClient.getModelsByBrand(vehicleType, brandId);
         log.info("[finish] FipeApplicationService - getModelsByBrand");
         return modelsByBrand;
+    }
+
+    @Override
+    public List<YearResponse> getYearsByModel(String vehicleType, String brandId, String modelId) {
+        log.info("[start] FipeApplicationService - getYearsByModel");
+        validateVehicleType(vehicleType);
+        validateBrandId(vehicleType, brandId);
+        validateModelId(vehicleType, brandId, modelId);
+        List<YearResponse> yearsByModel = fipeFeignClient.getYearsByModel(vehicleType, brandId, modelId);
+        log.info("[finish] FipeApplicationService - getYearsByModel");
+        return yearsByModel;
     }
 
     private void validateVehicleType(String vehicleType) {
@@ -53,6 +65,17 @@ public class FipeApplicationService implements FipeService {
         if (!brandExists){
             log.error("[error] Brand ID {} not found for vehicle type {}", brandId, vehicleType);
             throw APIException.build(HttpStatus.NOT_FOUND, "Brand ID not found: " + brandId);
+        }
+    }
+
+    private void validateModelId(String vehicleType, String brandId, String modelId) {
+        ModelResponse models = fipeFeignClient.getModelsByBrand(vehicleType, brandId);
+        boolean modelExists = models.getModels().stream()
+                .anyMatch(model -> model.getCode().equals(modelId));
+
+        if (!modelExists){
+            log.error("[error] Model ID {} not found for brand ID {}", modelId, brandId);
+            throw APIException.build(HttpStatus.NOT_FOUND, "Model ID not found: " + modelId);
         }
     }
 }

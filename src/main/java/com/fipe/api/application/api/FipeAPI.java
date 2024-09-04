@@ -2,6 +2,7 @@ package com.fipe.api.application.api;
 
 import com.fipe.api.application.api.response.BrandResponse;
 import com.fipe.api.application.api.response.ModelResponse;
+import com.fipe.api.application.api.response.YearResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,4 +27,12 @@ public interface FipeAPI {
     @Operation(summary = "Retrieve list of models for a specific brand and vehicle type")
     ModelResponse getModelsByBrand(@PathVariable("vehicleType") String vehicleType, @PathVariable("brandId") String brandId);
 
+
+    @GetMapping("/{vehicleType}/brands/{brandId}/models/{modelId}/yeahs")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Retrieve list of models by years")
+    List<YearResponse> getYearsByModel(
+            @PathVariable("vehicleType") String vehicleType,
+            @PathVariable("brandId") String brandId,
+            @PathVariable("modelId") String modelId);
 }
