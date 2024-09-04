@@ -16,7 +16,7 @@ public class Vehicle {
     private String yearCode;
     private int year;
     private String fuelType;
-    private String vehicleType;
+    private VehicleType vehicleType;
     private String fipeCode;
     private String referenceMonth;
     private String value;
