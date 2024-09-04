@@ -2,6 +2,7 @@ package com.fipe.api.application.service;
 
 import com.fipe.api.application.api.FipeFeignClient;
 import com.fipe.api.application.api.response.BrandResponse;
+import com.fipe.api.application.api.response.ModelResponse;
 import com.fipe.api.domain.VehicleType;
 import com.fipe.api.handler.APIException;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +21,20 @@ public class FipeApplicationService implements FipeService {
     @Override
     public List<BrandResponse> getVehicleBrands(String vehicleType) {
         log.info("[start] FipeApplicationService - getVehicleBrands");
-        validateVehicleType(vehicleType);
         List<BrandResponse> vehicleBrands = vehiclFeignClient.getVehicleBrands(vehicleType);
         vehicleBrands.sort(Comparator.comparing(BrandResponse::getName));
         log.info("[finish] FipeApplicationService - getVehicleBrands");
         return vehicleBrands;
+    }
+
+    @Override
+    public ModelResponse getModelsByBrand(String vehicleType, String brandId) {
+        log.info("[start] FipeApplicationService - getModelsByBrand");
+        validateVehicleType(vehicleType);
+        validateBrandId(vehicleType, brandId);
+        ModelResponse modelsByBrand = vehiclFeignClient.getModelsByBrand(vehicleType, brandId);
+        log.info("[finish] FipeApplicationService - getModelsByBrand");
+        return modelsByBrand;
     }
 
     private void validateVehicleType(String vehicleType) {
@@ -32,6 +42,17 @@ public class FipeApplicationService implements FipeService {
             log.error("[erro] Invalid vehicle type: {}", vehicleType);
             throw APIException.build(HttpStatus.BAD_REQUEST,
                     "Invalid vehicle type. Please choose either 'Carros', 'Motos', or 'Caminhoes'.");
+        }
+    }
+
+    private void validateBrandId(String vehicleType, String brandId) {
+        List<BrandResponse> brands = getVehicleBrands(vehicleType);
+        boolean brandExists = brands.stream()
+                .anyMatch(brandResponse -> brandResponse.getCode().equals(brandId));
+
+        if (!brandExists){
+            log.error("[error] Brand ID {} not found for vehicle type {}", brandId, vehicleType);
+            throw APIException.build(HttpStatus.NOT_FOUND, "Brand ID not found: " + brandId);
         }
     }
 }
