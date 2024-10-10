@@ -1,7 +1,8 @@
 package com.fipe.api.application.api;
 
 import com.fipe.api.application.api.response.BrandResponse;
-import com.fipe.api.application.api.response.ModelResponse;
+import com.fipe.api.input.ValueInput;
+import com.fipe.api.output.ModelResponse;
 import com.fipe.api.application.api.response.YearResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
@@ -28,11 +29,20 @@ public interface FipeAPI {
     ModelResponse getModelsByBrand(@PathVariable("vehicleType") String vehicleType, @PathVariable("brandId") String brandId);
 
 
-    @GetMapping("/{vehicleType}/brands/{brandId}/models/{modelId}/yeahs")
+    @GetMapping("/{vehicleType}/brands/{brandId}/models/{modelId}/years")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Retrieve list of models by years")
     List<YearResponse> getYearsByModel(
             @PathVariable("vehicleType") String vehicleType,
             @PathVariable("brandId") String brandId,
             @PathVariable("modelId") String modelId);
+
+    @GetMapping("/{vehicleType}/brands/{brandId}/models/{modelId}/years/{yearId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Retrieve vehicle details by year ID")
+    ValueInput getVehicleDetail(
+            @PathVariable("vehicleType") String vehicleType,
+            @PathVariable("brandId") String brandId,
+            @PathVariable("modelId") String modelId,
+            @PathVariable("yearId") String yearId);
 }

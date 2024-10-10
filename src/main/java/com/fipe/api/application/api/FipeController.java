@@ -1,9 +1,11 @@
 package com.fipe.api.application.api;
 
 import com.fipe.api.application.api.response.BrandResponse;
-import com.fipe.api.application.api.response.ModelResponse;
+import com.fipe.api.input.ValueInput;
+import com.fipe.api.output.ModelResponse;
 import com.fipe.api.application.api.response.YearResponse;
 import com.fipe.api.application.service.FipeService;
+import com.fipe.api.output.ValueOutput;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,5 +40,13 @@ public class FipeController implements FipeAPI {
         List<YearResponse> yearsByModel = fipeService.getYearsByModel(vehicleType, brandId, modelId);
         log.info("[finish] FipeController - getYearsByModel");
         return yearsByModel;
+    }
+
+    @Override
+    public ValueOutput getVehicleDetail(String vehicleType, String brandId, String modelId, String yearId) {
+        log.info("[start] FipeController - getVehicleDetail");
+        ValueOutput vehicleDetail = fipeService.getVehicleDetail(vehicleType, brandId, modelId, yearId);
+        log.info("[finish] FipeController - getVehicleDetail");
+        return vehicleDetail;
     }
 }
