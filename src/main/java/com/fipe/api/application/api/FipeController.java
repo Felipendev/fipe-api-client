@@ -1,10 +1,9 @@
 package com.fipe.api.application.api;
 
 import com.fipe.api.application.api.response.BrandResponse;
-import com.fipe.api.input.ValueInput;
-import com.fipe.api.output.ModelResponse;
 import com.fipe.api.application.api.response.YearResponse;
 import com.fipe.api.application.service.FipeService;
+import com.fipe.api.output.ModelResponse;
 import com.fipe.api.output.ValueOutput;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

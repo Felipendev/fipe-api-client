@@ -1,9 +1,9 @@
 package com.fipe.api.application.api;
 
 import com.fipe.api.application.api.response.BrandResponse;
-import com.fipe.api.input.ValueInput;
-import com.fipe.api.output.ModelResponse;
 import com.fipe.api.application.api.response.YearResponse;
+import com.fipe.api.output.ModelResponse;
+import com.fipe.api.output.ValueOutput;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +40,7 @@ public interface FipeAPI {
     @GetMapping("/{vehicleType}/brands/{brandId}/models/{modelId}/years/{yearId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Retrieve vehicle details by year ID")
-    ValueInput getVehicleDetail(
+    ValueOutput getVehicleDetail(
             @PathVariable("vehicleType") String vehicleType,
             @PathVariable("brandId") String brandId,
             @PathVariable("modelId") String modelId,
