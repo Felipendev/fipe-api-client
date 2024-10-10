@@ -2,10 +2,13 @@ package com.fipe.api.application.service;
 
 import com.fipe.api.application.api.FipeFeignClient;
 import com.fipe.api.application.api.response.BrandResponse;
-import com.fipe.api.application.api.response.ModelResponse;
+import com.fipe.api.input.ValueInput;
+import com.fipe.api.mapper.ValueMapper;
+import com.fipe.api.output.ModelResponse;
 import com.fipe.api.application.api.response.YearResponse;
 import com.fipe.api.domain.VehicleType;
 import com.fipe.api.handler.APIException;
+import com.fipe.api.output.ValueOutput;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -19,6 +22,7 @@ import java.util.List;
 @Log4j2
 public class FipeApplicationService implements FipeService {
     private final FipeFeignClient fipeFeignClient;
+    private final ValueMapper valueMapper;
     @Override
     public List<BrandResponse> getVehicleBrands(String vehicleType) {
         log.info("[start] FipeApplicationService - getVehicleBrands");
@@ -47,6 +51,20 @@ public class FipeApplicationService implements FipeService {
         List<YearResponse> yearsByModel = fipeFeignClient.getYearsByModel(vehicleType, brandId, modelId);
         log.info("[finish] FipeApplicationService - getYearsByModel");
         return yearsByModel;
+    }
+
+    @Override
+    public ValueOutput getVehicleDetail(String vehicleType, String brandId, String modelId, String yearId) {
+        log.info("[start] FipeService - getVehicleValue");
+        validateVehicleType(vehicleType);
+        validateBrandId(vehicleType, brandId);
+        validateModelId(vehicleType, brandId, modelId);
+        ValueInput valueInput = fipeFeignClient.getVehicleDetail(vehicleType, brandId, modelId, yearId);
+        log.info("ValueInput returned from Feign Client: {}", valueInput);
+        ValueOutput valueOutput = valueMapper.toOutput(valueInput);
+
+        log.info("[finish] FipeService - getVehicleValue");
+        return valueOutput;
     }
 
     private void validateVehicleType(String vehicleType) {
