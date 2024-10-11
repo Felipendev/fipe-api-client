@@ -2,9 +2,7 @@ package com.fipe.api.mapper;
 
 import com.fipe.api.input.ModelInput;
 import com.fipe.api.output.ModelOutput;
-import com.fipe.api.output.YearOutput;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
 
 import java.util.stream.Collectors;
 
