@@ -1,14 +1,18 @@
-package com.fipe.api.application.api.response;
+package com.fipe.api.input;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.ToString;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
-public class BrandResponse {
-    @JsonProperty(value = "codigo")
+@ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class YearInput {
+
+    @JsonProperty("codigo")
     private String code;
-    @JsonProperty(value = "nome")
+
+    @JsonProperty("nome")
     private String name;
 }
