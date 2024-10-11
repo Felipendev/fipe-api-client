@@ -1,8 +1,9 @@
 package com.fipe.api.application.api;
 
-import com.fipe.api.application.api.response.BrandResponse;
-import com.fipe.api.application.api.response.ModelResponse;
-import com.fipe.api.application.api.response.YearResponse;
+import com.fipe.api.output.BrandOutput;
+import com.fipe.api.output.YearOutput;
+import com.fipe.api.output.ModelOutput;
+import com.fipe.api.output.ValueOutput;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,19 +21,28 @@ public interface FipeAPI {
     @GetMapping("/{type}/brands")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Retrieve list of brands for a specific vehicle type (car, motorcycle, or truck)")
-    List<BrandResponse> getVehicleBrands(@PathVariable("type") String vehicle);
+    List<BrandOutput> getVehicleBrands(@PathVariable("type") String vehicle);
 
     @GetMapping("/{vehicleType}/brands/{brandId}/models")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Retrieve list of models for a specific brand and vehicle type")
-    ModelResponse getModelsByBrand(@PathVariable("vehicleType") String vehicleType, @PathVariable("brandId") String brandId);
+    ModelOutput getModelsByBrand(@PathVariable("vehicleType") String vehicleType, @PathVariable("brandId") String brandId);
 
 
-    @GetMapping("/{vehicleType}/brands/{brandId}/models/{modelId}/yeahs")
+    @GetMapping("/{vehicleType}/brands/{brandId}/models/{modelId}/years")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Retrieve list of models by years")
-    List<YearResponse> getYearsByModel(
+    List<YearOutput> getYearsByModel(
             @PathVariable("vehicleType") String vehicleType,
             @PathVariable("brandId") String brandId,
             @PathVariable("modelId") String modelId);
+
+    @GetMapping("/{vehicleType}/brands/{brandId}/models/{modelId}/years/{yearId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Retrieve vehicle details by year ID")
+    ValueOutput getVehicleDetail(
+            @PathVariable("vehicleType") String vehicleType,
+            @PathVariable("brandId") String brandId,
+            @PathVariable("modelId") String modelId,
+            @PathVariable("yearId") String yearId);
 }
